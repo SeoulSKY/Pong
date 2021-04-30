@@ -73,13 +73,4 @@ class Player:
         self._y_speed = 0
 
     def is_collided(self, x_pos, y_pos):
-        # check if the given positions are in the player's hit box
-        if self.x_pos() <= x_pos <= self.x_pos() + WIDTH and self.y_pos() <= y_pos < self.y_pos() + HEIGHT:
-            return True
-
-        # check for the player's vertices
-        if (y_pos == self.y_pos() and (x_pos == self.x_pos() or x_pos == self.x_pos() + WIDTH) or
-                x_pos == self.x_pos and (y_pos == self.y_pos() or y_pos == self.y_pos() + WIDTH)):
-            return True
-
-        return False
+        return self.x_pos() <= x_pos <= self.x_pos() + WIDTH and self.y_pos() <= y_pos < self.y_pos() + HEIGHT
