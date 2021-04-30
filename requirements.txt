@@ -1,3 +1,4 @@
-# manually install tkinter by typing the following command in the Terminal: sudo apt-get install python3-tk
+# use the following command in terminal to install the required packages automatically: pip3 install -r requirements.txt
+# manually install tkinter with this command: sudo apt-get install python3-tk
 
 pygame>=2.0.1
