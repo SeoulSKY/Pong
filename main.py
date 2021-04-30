@@ -66,7 +66,7 @@ def handle_collision(player):
         ball.invert_y_speed()
 
     # accelerate the ball depending on the speed of the player
-    factor = 1 + player.y_speed() / Player.MAX_Y_SPEED
+    factor = 1 + abs(player.y_speed()) / Player.MAX_Y_SPEED
     ball.accelerate(factor)
 
 
