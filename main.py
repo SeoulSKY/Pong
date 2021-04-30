@@ -104,6 +104,9 @@ def main():
         else:
             player2.stop()
 
+        if pressed[pygame.K_ESCAPE]:
+            messagebox.showinfo(message="The game is paused. Press OK to continue.")
+
         # check if the ball collided with player1
         if player1.is_collided(ball.x_pos() - Ball.RADIUS, ball.y_pos()):
             handle_collision(player1)
