@@ -27,27 +27,44 @@ class Player:
     def set_color(self, color):
         self._color = color
 
+    def y_speed(self):
+        return self._y_speed
+
+    def is_moving_up(self):
+        return self._y_speed < 0
+
+    def is_moving_down(self):
+        return self._y_speed > 0
+
     def move_up(self):
         # check if the player is moving down
-        if self._y_speed > 0:
+        if self.is_moving_down():
             self.stop()
 
         self._move()
 
         # accelerate upward
-        if self._y_speed >= -MAX_Y_SPEED:
-            self._y_speed -= 0.5
+        if self._y_speed > -MAX_Y_SPEED:
+            self._y_speed -= 0.7
+
+            # make sure the current speed doesn't exceed the maximum speed
+            if self._y_speed < -MAX_Y_SPEED:
+                self._y_speed = -MAX_Y_SPEED
 
     def move_down(self):
         # check if the player is moving up
-        if self._y_speed < 0:
+        if self.is_moving_up():
             self.stop()
 
         self._move()
 
         # accelerate downward
-        if self._y_speed <= MAX_Y_SPEED:
-            self._y_speed += 0.5
+        if self._y_speed < MAX_Y_SPEED:
+            self._y_speed += 0.7
+
+            # make sure the current speed doesn't exceed the maximum speed
+            if self._y_speed > MAX_Y_SPEED:
+                self._y_speed = MAX_Y_SPEED
 
     def _move(self):
         self._rect.move_ip(0, self._y_speed)
@@ -56,4 +73,13 @@ class Player:
         self._y_speed = 0
 
     def is_collided(self, x_pos, y_pos):
-        return self.x_pos() <= x_pos <= self.x_pos() + WIDTH and self.y_pos() <= y_pos < self.y_pos() + HEIGHT
+        # check if the given positions are in the player's hit box
+        if self.x_pos() <= x_pos <= self.x_pos() + WIDTH and self.y_pos() <= y_pos < self.y_pos() + HEIGHT:
+            return True
+
+        # check for the player's vertices
+        if (y_pos == self.y_pos() and (x_pos == self.x_pos() or x_pos == self.x_pos() + WIDTH) or
+                x_pos == self.x_pos and (y_pos == self.y_pos() or y_pos == self.y_pos() + WIDTH)):
+            return True
+
+        return False

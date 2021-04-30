@@ -25,8 +25,26 @@ class Ball:
     def color(self):
         return self._color
 
+    def x_speed(self):
+        return self._x_speed
+
+    def y_speed(self):
+        return self._y_speed
+
     def set_color(self, color):
         self._color = color
+
+    def is_moving_up(self):
+        return self._y_speed < 0
+
+    def is_moving_down(self):
+        return self._y_speed > 0
+
+    def is_moving_left(self):
+        return self._x_speed < 0
+
+    def is_moving_right(self):
+        return self._x_speed > 0
 
     def invert_x_speed(self):
         self._x_speed = -self._x_speed
@@ -44,6 +62,16 @@ class Ball:
         self._x_pos += self._x_speed
         self._y_pos += self._y_speed
 
-    def change_speed(self, factor):
-        self._x_speed = DEFAULT_X_SPEED * factor
-        self._y_speed = DEFAULT_Y_SPEED * factor
+    def accelerate(self, factor):
+        if factor < 1:
+            factor = 1
+
+        if self.is_moving_left():
+            self._x_speed = -DEFAULT_X_SPEED * factor
+        else:   # ball is moving right
+            self._x_speed = DEFAULT_X_SPEED * factor
+
+        if self.is_moving_up():
+            self._y_speed = -DEFAULT_Y_SPEED * factor
+        else:   # ball is moving down
+            self._y_speed = DEFAULT_Y_SPEED * factor

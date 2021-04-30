@@ -17,7 +17,6 @@ WINDOW = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
 player1 = Player.Player(x_pos=0, y_pos=WINDOW_HEIGHT / 2 - Player.HEIGHT / 2, color=RED)
 player2 = Player.Player(x_pos=WINDOW_WIDTH - Player.WIDTH, y_pos=WINDOW_HEIGHT / 2 - Player.HEIGHT / 2, color=BLUE)
-
 ball = Ball.Ball(x_pos=WINDOW_WIDTH / 2, y_pos=WINDOW_HEIGHT / 2, color=GREEN)
 
 
@@ -32,6 +31,21 @@ def update_window():
     pygame.draw.circle(WINDOW, ball.color(), ball.center(), Ball.RADIUS)
 
     pygame.display.update()
+
+
+def handle_collision(player):
+    if (player is player1 and ball.is_moving_left()) or (player is player2 and ball.is_moving_right()):
+        ball.invert_x_speed()
+
+    # bounce the ball upward if the ball was hit when the player was moving up
+    if player.is_moving_up() and ball.is_moving_down():
+        ball.invert_y_speed()
+    # bounce the ball downward if the ball was hit when the player was moving down
+    elif player.is_moving_down() and ball.is_moving_up():
+        ball.invert_y_speed()
+
+    # accelerate the ball depending on the speed of the player
+    ball.accelerate(1 + player.y_speed() / Player.MAX_Y_SPEED)
 
 
 def main():
@@ -63,11 +77,11 @@ def main():
 
         # check if the ball collided with player1
         if player1.is_collided(ball.x_pos() - Ball.RADIUS, ball.y_pos()):
-            ball.invert_x_speed()
+            handle_collision(player1)
 
         # check if the ball collided with player2
-        if player2.is_collided(ball.x_pos() + Ball.RADIUS, ball.y_pos()):
-            ball.invert_x_speed()
+        elif player2.is_collided(ball.x_pos() + Ball.RADIUS, ball.y_pos()):
+            handle_collision(player2)
 
         # check if the ball collided with the top or bottom wall
         if ball.y_pos() - Ball.RADIUS <= 0 or ball.y_pos() + Ball.RADIUS >= WINDOW_HEIGHT:
