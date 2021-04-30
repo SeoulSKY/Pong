@@ -1,3 +1,5 @@
+import random
+
 RADIUS = 15
 DEFAULT_X_SPEED = 7
 DEFAULT_Y_SPEED = 5
@@ -25,15 +27,6 @@ class Ball:
     def color(self):
         return self._color
 
-    def x_speed(self):
-        return self._x_speed
-
-    def y_speed(self):
-        return self._y_speed
-
-    def set_color(self, color):
-        self._color = color
-
     def is_moving_up(self):
         return self._y_speed < 0
 
@@ -57,6 +50,12 @@ class Ball:
         self._y_pos = self._DEFAULT_Y_POS
         self._x_speed = DEFAULT_X_SPEED
         self._y_speed = DEFAULT_Y_SPEED
+
+        # randomly invert the starting direction of the ball
+        if random.randint(0, 1) == 0:
+            self._x_speed = -self._x_speed
+        if random.randint(0, 1) == 0:
+            self._y_speed = -self._y_speed
 
     def move(self):
         self._x_pos += self._x_speed

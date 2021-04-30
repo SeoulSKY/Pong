@@ -8,7 +8,9 @@ MAX_Y_SPEED = 20
 class Player:
 
     def __init__(self, x_pos, y_pos, color):
-        self._rect = Rect(x_pos, y_pos, WIDTH, HEIGHT)
+        self._DEFAULT_X_POS = x_pos
+        self._DEFAULT_Y_POS = y_pos
+        self._rect = Rect(self._DEFAULT_X_POS, self._DEFAULT_Y_POS, WIDTH, HEIGHT)
         self._color = color
         self._y_speed = 0
 
@@ -23,9 +25,6 @@ class Player:
 
     def color(self):
         return self._color
-
-    def set_color(self, color):
-        self._color = color
 
     def y_speed(self):
         return self._y_speed
@@ -73,4 +72,9 @@ class Player:
         self._y_speed = 0
 
     def is_collided(self, x_pos, y_pos):
-        return self.x_pos() <= x_pos <= self.x_pos() + WIDTH and self.y_pos() <= y_pos < self.y_pos() + HEIGHT
+        return self.x_pos() <= x_pos <= self.x_pos() + WIDTH and self.y_pos() <= y_pos <= self.y_pos() + HEIGHT
+
+    def reset(self):
+        self._rect.x = self._DEFAULT_X_POS
+        self._rect.y = self._DEFAULT_Y_POS
+        self.stop()
