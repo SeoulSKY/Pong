@@ -5,8 +5,8 @@ The purpose of building this program is to get familiarized with python OOP and 
 
 How to play:
 -
-* player 1 is the red square on the left.
-* player 2 is the blue square on the right.
+* player 1 is the red rectangle on the left.
+* player 2 is the blue rectangle on the right.
 * press w key and s key to move player 1 up and down.
 * press up-arrow and down-arrow to move player 2 up and down.
 * press the escape key to pause the game.
