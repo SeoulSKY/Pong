@@ -12,7 +12,7 @@ How to play:
 * press the `escape` key to pause the game.
 * the game overs when one of the players reaches 11 points.
 
-How to set up (Ubuntu):
+How to set up:
 -
 * use the following command in terminal to install the required packages automatically:
 ```

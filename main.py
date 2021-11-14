@@ -1,8 +1,8 @@
 import pygame
 
-import Player
-import Ball
-import ScoreBoard
+from player import Player, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_MAX_Y_SPEED
+from ball import Ball, BALL_RADIUS
+from score_board import ScoreBoard
 
 from tkinter import Tk, messagebox
 
@@ -14,70 +14,72 @@ WINDOW_HEIGHT = 720
 FPS = 60
 
 BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 
 pygame.font.init()
-FONT_SIZE = int(WINDOW_WIDTH / 12)
-arial_font = pygame.font.SysFont("arial", FONT_SIZE)
 
 pygame.display.set_caption("Ping Pong")
 WINDOW = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
-player1 = Player.Player(x_pos=0, y_pos=WINDOW_HEIGHT / 2 - Player.HEIGHT / 2, color=RED)
-player2 = Player.Player(x_pos=WINDOW_WIDTH - Player.WIDTH, y_pos=WINDOW_HEIGHT / 2 - Player.HEIGHT / 2, color=BLUE)
-ball = Ball.Ball(x_pos=WINDOW_WIDTH / 2, y_pos=WINDOW_HEIGHT / 2, color=GREEN)
-score_board = ScoreBoard.ScoreBoard()
+PLAYER_1 = Player(window=WINDOW, x_pos=0, y_pos=WINDOW_HEIGHT / 2 - PLAYER_HEIGHT / 2, color=RED)
+PLAYER_2 = Player(window=WINDOW, x_pos=WINDOW_WIDTH - PLAYER_WIDTH, y_pos=WINDOW_HEIGHT / 2 - PLAYER_HEIGHT / 2, color=BLUE)
+BALL = Ball(window=WINDOW, x_pos=WINDOW_WIDTH / 2, y_pos=WINDOW_HEIGHT / 2, color=GREEN)
+SCORE_BOARD = ScoreBoard(window=WINDOW)
 
 
-def update_window():
+def update_window() -> None:
+    """
+    Draw the game objects
+    """
     WINDOW.fill(BLACK)
 
-    # draw the score board
-    ver_margin = WINDOW_HEIGHT * 0.05
-    hor_margin = WINDOW_WIDTH * 0.1
+    SCORE_BOARD.draw()
 
-    player1_score = arial_font.render(str(score_board.player1_score()), False, WHITE)
-    player2_score = arial_font.render(str(score_board.player2_score()), False, WHITE)
-    WINDOW.blit(player1_score, (WINDOW_WIDTH / 2 - FONT_SIZE / 2 - hor_margin, ver_margin))
-    WINDOW.blit(player2_score, (WINDOW_WIDTH / 2 + hor_margin, ver_margin))
+    PLAYER_1.draw()
+    PLAYER_2.draw()
 
-    # draw the players
-    pygame.draw.rect(WINDOW, player1.color(), player1.rect())
-    pygame.draw.rect(WINDOW, player2.color(), player2.rect())
-
-    # draw the ball
-    pygame.draw.circle(WINDOW, ball.color(), ball.center(), Ball.RADIUS)
+    BALL.draw()
 
     pygame.display.update()
 
 
-def handle_collision(player):
-    if (player is player1 and ball.is_moving_left()) or (player is player2 and ball.is_moving_right()):
-        ball.invert_x_speed()
+def handle_collision(player: Player) -> None:
+    """
+    Handles collision between the given player and the ball
+    :param player: The player who is collided with the ball
+    """
+    if (player is PLAYER_1 and BALL.is_moving_left()) or (player is PLAYER_2 and BALL.is_moving_right()):
+        BALL.invert_x_speed()
 
     # bounce the ball upward if the ball was hit when the player was moving up
-    if player.is_moving_up() and ball.is_moving_down():
-        ball.invert_y_speed()
+    if player.is_moving_up() and BALL.is_moving_down():
+        BALL.invert_y_speed()
+
     # bounce the ball downward if the ball was hit when the player was moving down
-    elif player.is_moving_down() and ball.is_moving_up():
-        ball.invert_y_speed()
+    elif player.is_moving_down() and BALL.is_moving_up():
+        BALL.invert_y_speed()
 
     # accelerate the ball depending on the speed of the player
-    factor = 1 + abs(player.y_speed()) / Player.MAX_Y_SPEED
-    ball.accelerate(factor)
+    factor = 1 + abs(player.y_speed()) / PLAYER_MAX_Y_SPEED
+    BALL.accelerate(factor)
 
 
-def reset_game():
-    player1.reset()
-    player2.reset()
-    score_board.reset()
-    ball.reset()
+def reset_game() -> None:
+    """
+    Reset the game to the initial state
+    """
+    PLAYER_1.reset()
+    PLAYER_2.reset()
+    SCORE_BOARD.reset()
+    BALL.reset()
 
 
-def main():
+def main() -> None:
+    """
+    Run the game
+    """
     clock = pygame.time.Clock()
     running = True
     while running:
@@ -90,55 +92,55 @@ def main():
 
         # check keyboard inputs
         pressed = pygame.key.get_pressed()
-        if pressed[pygame.K_w] and player1.y_pos() > 0:
-            player1.move_up()
-        elif pressed[pygame.K_s] and player1.y_pos() + Player.HEIGHT < WINDOW_HEIGHT:
-            player1.move_down()
+        if pressed[pygame.K_w] and PLAYER_1.y_pos() > 0:
+            PLAYER_1.move_up()
+        elif pressed[pygame.K_s] and PLAYER_1.y_pos() + PLAYER_HEIGHT < WINDOW_HEIGHT:
+            PLAYER_1.move_down()
         else:
-            player1.stop()
+            PLAYER_1.stop()
 
-        if pressed[pygame.K_UP] and player2.y_pos() > 0:
-            player2.move_up()
-        elif pressed[pygame.K_DOWN] and player2.y_pos() + Player.HEIGHT < WINDOW_HEIGHT:
-            player2.move_down()
+        if pressed[pygame.K_UP] and PLAYER_2.y_pos() > 0:
+            PLAYER_2.move_up()
+        elif pressed[pygame.K_DOWN] and PLAYER_2.y_pos() + PLAYER_HEIGHT < WINDOW_HEIGHT:
+            PLAYER_2.move_down()
         else:
-            player2.stop()
+            PLAYER_2.stop()
 
         if pressed[pygame.K_ESCAPE]:
             messagebox.showinfo(message="The game is paused. Press OK to continue.")
 
         # check if the ball collided with player1
-        if player1.is_collided(ball.x_pos() - Ball.RADIUS, ball.y_pos()):
-            handle_collision(player1)
+        if PLAYER_1.is_collided(BALL.x_pos() - BALL_RADIUS, BALL.y_pos()):
+            handle_collision(PLAYER_1)
 
         # check if the ball collided with player2
-        elif player2.is_collided(ball.x_pos() + Ball.RADIUS, ball.y_pos()):
-            handle_collision(player2)
+        elif PLAYER_2.is_collided(BALL.x_pos() + BALL_RADIUS, BALL.y_pos()):
+            handle_collision(PLAYER_2)
 
         # check if the ball collided with the top or bottom wall
-        if ball.y_pos() - Ball.RADIUS <= 0 or ball.y_pos() + Ball.RADIUS >= WINDOW_HEIGHT:
-            ball.invert_y_speed()
+        if BALL.y_pos() - BALL_RADIUS <= 0 or BALL.y_pos() + BALL_RADIUS >= WINDOW_HEIGHT:
+            BALL.invert_y_speed()
 
         # check if player1 missed the ball
-        if ball.x_pos() - Ball.RADIUS < 0:
-            score_board.add_player2_score()
-            ball.reset()
+        if BALL.x_pos() - BALL_RADIUS < 0:
+            SCORE_BOARD.add_player2_score()
+            BALL.reset()
 
         # check if player2 missed the ball
-        elif ball.x_pos() + Ball.RADIUS > WINDOW_WIDTH:
-            score_board.add_player1_score()
-            ball.reset()
+        elif BALL.x_pos() + BALL_RADIUS > WINDOW_WIDTH:
+            SCORE_BOARD.add_player1_score()
+            BALL.reset()
 
-        ball.move()
+        BALL.move()
         update_window()
 
         # check if player1 has won
-        if score_board.is_player1_won():
+        if SCORE_BOARD.is_player1_won():
             messagebox.showinfo(message="Player 1 won!")
             reset_game()
 
         # check if player 2 has won
-        if score_board.is_player2_won():
+        if SCORE_BOARD.is_player2_won():
             messagebox.showinfo(message="Player 2 won!")
             reset_game()
 
