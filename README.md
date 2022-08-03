@@ -1,7 +1,5 @@
-# Ping Pong
-Python Ping Pong game implemented with pygame.
-
-The purpose of building this program is to get familiarized with python OOP and pygame.
+# Pong
+Python Pong game implemented with pygame.
 
 How to play:
 -
