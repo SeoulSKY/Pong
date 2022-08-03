@@ -20,7 +20,7 @@ GREEN = (0, 255, 0)
 
 pygame.font.init()
 
-pygame.display.set_caption("Ping Pong")
+pygame.display.set_caption("Pong")
 WINDOW = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
 PLAYER_1 = Player(window=WINDOW, x_pos=0, y_pos=WINDOW_HEIGHT / 2 - PLAYER_HEIGHT / 2, color=RED)
