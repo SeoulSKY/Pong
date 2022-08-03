@@ -1,6 +1,11 @@
 # Pong
 Python Pong game implemented with pygame.
 
+
+https://user-images.githubusercontent.com/48105703/182729120-0ced6c62-30b6-4dbc-a12c-1c5196e3d06a.mp4
+
+
+
 How to play:
 -
 * `player 1` is the `red` rectangle on the left.
